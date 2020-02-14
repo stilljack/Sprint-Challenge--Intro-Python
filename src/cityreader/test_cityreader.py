@@ -1,15 +1,18 @@
+import decimal
 import unittest
 from src.cityreader.cityreader import City, cityreader
 
 
 def check_city(inp, exp):
-  if inp.cityName != exp.cityName:
+  if str(inp.cityName) != str(exp.cityName):
     print("CITYNAMES NOT EQUAL")
     return False
-  if inp.lat != exp.lat:
+  if str(inp.lat) != str(exp.lat):
+    print(inp.lat)
+    print(exp.lat)
     print("lat NOT EQUAL")
     return False
-  if inp.lon != exp.lon:
+  if str(inp.lon) != str(exp.lon):
     print("lon NOT EQUAL")
     return False
   return True
@@ -22,21 +25,21 @@ class CityreaderTests(unittest.TestCase):
       City("Richmond", 37.5294,-77.4755),
       City("Virginia Beach", 36.7335,-76.0435),
       City("Washington", 38.9047,-77.0163),
-      City("Milwaukee", 43.064,-87.9669),
+      City("Milwaukee", "43.0640",-87.9669),
       City("Orlando", 28.4801,-81.3448),
-      City("Miami", 25.784,-80.2102),
+      City("Miami", "25.7840",-80.2102),
       City("Tampa", 27.9937,-82.4454),
       City("Jacksonville", 30.3322,-81.6749),
       City("Albuquerque", 35.1055,-106.6476),
       City("Fort Worth", 32.7813,-97.3466),
       City("McAllen", 26.2203,-98.2457),
-      City("El Paso", 31.8478,-106.431),
+      City("El Paso", 31.8478,"-106.4310"),
       City("Dallas", 32.7938,-96.7659),
       City("Austin", 30.3038,-97.7545),
       City("Houston", 29.7871,-95.3936),
       City("San Antonio", 29.4722,-98.5247),
       City("New Orleans", 30.0687,-89.9288),
-      City("Charlotte", 35.208,-80.8308),
+      City("Charlotte", "35.2080",-80.8308),
       City("Raleigh", 35.8323,-78.6441),
       City("Omaha", 41.2634,-96.0453),
       City("Memphis", 35.1047,-89.9773),
@@ -47,13 +50,13 @@ class CityreaderTests(unittest.TestCase):
       City("Bronx", 40.8501,-73.8662),
       City("Brooklyn", 40.6501,-73.9496),
       City("Manhattan", 40.7834,-73.9662),
-      City("Philadelphia", 40.0076,-75.134),
+      City("Philadelphia", 40.0076,"-75.1340"),
       City("Pittsburgh", 40.4396,-79.9763),
       City("Sacramento", 38.5666,-121.4683),
       City("Riverside", 33.9382,-117.3949),
       City("San Francisco", 37.7561,-122.4429),
       City("San Diego", 32.8312,-117.1225),
-      City("San Jose", 37.302,-121.8488),
+      City("San Jose", "37.3020",-121.8488),
       City("Los Angeles", 34.114,-118.4068),
       City("Las Vegas", 36.2288,-115.2603),
       City("Denver", 39.7621,-104.8759),
