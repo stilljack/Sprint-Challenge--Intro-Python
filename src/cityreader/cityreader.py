@@ -35,8 +35,8 @@ class City:
     self.cityName=cityName #0
     self.stateName=stateName #1
     self.countyName=countyName #2
-    self.lat=lat #3
-    self.lon=lon #4
+    self.lat=float(lat) #3
+    self.lon=float(lon) #4
     self.population=population
     self.density=density
     self.timeZone=timeZone
@@ -60,18 +60,16 @@ def cityreader(cities=[]):
   # `cities` list
     #name:city lat:state_name, lon:['county_name', 'lat', 'lng', 'population', 'density', 'timezone', 'zips']
   with open('cities.csv') as csvf:
+    next(csvf)
     csvReader = csv.reader(csvf)
-    count =0
+
     for row in csvReader:
       zipsSplit = row[8].split(" ")
       #prob a better way to do this
-      if count==0:
-        count+=1
-      else:
-        lat = float(row[3])
-        lon = float(row[4])
-        newCity = City(row[0],lat,lon, row[1], row[2],row[5],row[6],row[7],zipsSplit)
-        cities.append(newCity)
+      lat = row[3]
+      lon = row[4]
+      newCity = City(row[0],lat,lon, row[1], row[2],row[5],row[6],row[7],zipsSplit)
+      cities.append(newCity)
 
   return cities
 
