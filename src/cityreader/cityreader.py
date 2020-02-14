@@ -68,8 +68,8 @@ def cityreader(cities=[]):
       if count==0:
         count+=1
       else:
-        lat = row[3]
-        lon = row[4]
+        lat = float(row[3])
+        lon = float(row[4])
         newCity = City(row[0],lat,lon, row[1], row[2],row[5],row[6],row[7],zipsSplit)
         cities.append(newCity)
 
