@@ -15,25 +15,42 @@
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
 import csv
+import textwrap
+import decimal
+
 
 class City:
   #name:city lat:state_name, lon:['county_name', 'lat', 'lng', 'population', 'density', 'timezone', 'zips']
-  state_name = ""
+
   cityName=""
-  countyName
+  stateName = ""
+  countyName =""
   lat = 0.1
   lon = 0.1
   population = 0.1
   density = 0.1
-  timezome ="pst"
+  timeZone ="pst"
   zips = []
-  def __init__(self,cityName,stateName,countyName,lon,lat,population,density):
-    self.cityName=cityName
-    self.lat=lat
-    self.lon=lon
-    self.countyName=countyName
+  def __init__(self,cityName,lat,lon,stateName="",countyName="",population="",density="",timeZone="",zips:list=""):
+    self.cityName=cityName #0
+    self.stateName=stateName #1
+    self.countyName=countyName #2
+    self.lat=lat #3
+    self.lon=lon #4
+    self.population=population
+    self.density=density
+    self.timeZone=timeZone
+    self.zips=zips
+
   def __str__(self):
-      return "name:%s lat:%s, lon:%s" % (self.cityName,self.lat, self.lon)
+    zipJoin = ', '.join(self.zips)
+    return (f"""
+{self.cityName},{self.countyName} county,{self.stateName} 
+LatLng: {self.lat}, {self.lon}
+Population: {self.population}
+Density: {self.density}
+Time Zone: {self.timeZone}
+Zip Codes: {textwrap.fill(zipJoin,80)}""")
 
 cities = []
 
@@ -41,22 +58,28 @@ def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    with open('cities.csv') as csvf:
-      csvReader = csv.reader(csvf)
-      for row in csvReader:
-        count=-1
-        for i in row:
-          count+=1
-          print(f"i = {i} count = {count}")
-        cities.append(City(row[0], row[1], row[2],12,12,123))
+    #name:city lat:state_name, lon:['county_name', 'lat', 'lng', 'population', 'density', 'timezone', 'zips']
+  with open('cities.csv') as csvf:
+    csvReader = csv.reader(csvf)
+    count =0
+    for row in csvReader:
+      zipsSplit = row[8].split(" ")
+      #prob a better way to do this
+      if count==0:
+        count+=1
+      else:
+        lat = row[3]
+        lon = row[4]
+        newCity = City(row[0],decimal.Decimal(lat),decimal.Decimal(lon), row[1], row[2],row[5],row[6],row[7],zipsSplit)
+        cities.append(newCity)
 
-    return cities
+  return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
-    print(c)
+  print(c)
 
 # STRETCH GOAL!
 #
@@ -98,3 +121,8 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # the specified coordinates.
 
   return within
+
+       #count=-1
+      #for i in zipsSplit:
+        #count+=1
+        #print(f"i = {count} and zipsplit[i] {i}")
