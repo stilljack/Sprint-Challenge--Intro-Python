@@ -70,7 +70,7 @@ def cityreader(cities=[]):
       else:
         lat = row[3]
         lon = row[4]
-        newCity = City(row[0],decimal.Decimal(lat),decimal.Decimal(lon), row[1], row[2],row[5],row[6],row[7],zipsSplit)
+        newCity = City(row[0],lat,lon, row[1], row[2],row[5],row[6],row[7],zipsSplit)
         cities.append(newCity)
 
   return cities
