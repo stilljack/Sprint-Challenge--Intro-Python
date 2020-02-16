@@ -1,15 +1,20 @@
 import unittest
-from cityreader import City, cityreader
-
+from src.cityreader import *
+from src.cityreader.cityreader import cityreader, City
 def check_city(inp, exp):
-    if inp.name != exp.name:
+    if inp.cityName != exp.cityName:
+      print ("fail city")
       return False
     if inp.lat != exp.lat:
+      print(inp.cityName)
+      print(inp.lat)
+      print(exp.lat)
+      print ("fail lay")
       return False
     if inp.lon != exp.lon:
+      print ("fail lon")
       return False
     return True
-
 class CityreaderTests(unittest.TestCase):
   def setUp(self):
     self.cities = cityreader()
@@ -75,11 +80,8 @@ class CityreaderTests(unittest.TestCase):
       City("Louisville", 38.1662,-85.6488),
       City("Portland", 45.5372,-122.65)
     ]
-    
   def test_cityreader_correctness(self):
     for i in range(len(self.cities)):
       self.assertTrue(check_city(self.cities[i], self.expected[i]))
-
-
 if __name__ == '__main__':
   unittest.main()

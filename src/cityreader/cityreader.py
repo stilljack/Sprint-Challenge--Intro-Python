@@ -14,20 +14,70 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
+import csv
+import textwrap
+import decimal
+
+
+class City:
+  #name:city lat:state_name, lon:['county_name', 'lat', 'lng', 'population', 'density', 'timezone', 'zips']
+
+  cityName=""
+  stateName = ""
+  countyName =""
+  lat = 0.1
+  lon = 0.1
+  population = 0.1
+  density = 0.1
+  timeZone ="pst"
+  zips = []
+  def __init__(self,cityName,lat,lon,stateName="",countyName="",population="",density="",timeZone="",zips:list=""):
+    self.cityName=cityName #0
+    self.stateName=stateName #1
+    self.countyName=countyName #2
+    self.lat=float(lat) #3
+    self.lon=float(lon) #4
+    self.population=population
+    self.density=density
+    self.timeZone=timeZone
+    self.zips=zips
+
+  def __str__(self):
+    zipJoin = ', '.join(self.zips)
+    return (f"""
+{self.cityName},{self.countyName} county,{self.stateName} 
+LatLng: {self.lat}, {self.lon}
+Population: {self.population}
+Density: {self.density}
+Time Zone: {self.timeZone}
+Zip Codes: {textwrap.fill(zipJoin,80)}""")
+
 cities = []
 
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
-    return cities
+  #name:city lat:state_name, lon:['county_name', 'lat', 'lng', 'population', 'density', 'timezone', 'zips']
+  with open('cities.csv') as csvf:
+    next(csvf)
+    csvReader = csv.reader(csvf)
+
+    for row in csvReader:
+      zipsSplit = row[8].split(" ")
+      #prob a better way to do this
+      lat = row[3]
+      lon = row[4]
+      newCity = City(row[0],lat,lon, row[1], row[2],row[5],row[6],row[7],zipsSplit)
+      cities.append(newCity)
+
+  return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
-    print(c)
+  print(c)
 
 # STRETCH GOAL!
 #
@@ -59,13 +109,88 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+latEntryCheck =True
+lonEntryCheck =True
+def latInput(current):
+  lat = input(f"input lattitude {current}")
+  try:
+    val = float(lat)
+    #print(f"{val} is a float")
+    global latEntryCheck
+    latEntryCheck=False
+    return val
+  except ValueError:
+    print("That's not an float!")
+    latInput()
+
+def lonInput(current):
+  lon = input(f"input longitude {current}")
+  try:
+    val = float(lon)
+    #print(f"{val} is a float")
+    global lonEntryCheck
+    lonEntryCheck=False
+    return val
+  except ValueError:
+    print("That's not an float!")
+    lonInput()
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
   within = []
 
   # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
+  # Go through each city and check to see if it falls within
   # the specified coordinates.
+  higherLat:float
+  lowerLat:float
+  higherLon:float
+  lowerLon:float
+  if lat1>lat2:
+    higherLat=lat1
+    lowerLat=lat2
+    higherLon=lon1
+    lowerLon=lon2
+  else:
+    higherLat=lat2
+    lowerLat=lat1
+    higherLon=lon2
+    lowerLon=lon1
 
+  for city in cities:
+    if higherLat > city.lat and higherLon > city.lon:
+      if lowerLat < city.lat and lowerLon < city.lon:
+        within.append(city)
   return within
+
+  #count=-1
+  #for i in zipsSplit:
+  #count+=1
+  #print(f"i = {count} and zipsplit[i] {i}")
+
+def comboInput():
+  combo = input(f"input lat/lon range as 4 floats delinieated by spaces i.e. 30 100 40 110\n~")
+  split = combo.split(" ")
+  try:
+    lat1 = float(split[0])
+    lon1 = float(split[1])
+    lat2 = float(split[2])
+    lon2 = float(split[3])
+    #print(f"{val} is a float")
+    global  latEntryCheck
+    latEntryCheck =False
+    global lonEntryCheck
+    lonEntryCheck=False
+    citiesReturned= cityreader_stretch(lat1,lon1,lat2,lon2,cityreader(cities))
+    return citiesReturned
+
+  except ValueError:
+    print("at one of those aint no float!")
+    combo()
+#while latEntryCheck or lonEntryCheck:
+  #lat1 =latInput(1)
+  #lon1 = lonInput(1)
+  #lat2 =latInput(2)
+  #lon2 = lonInput(2)
+  #print(comboInput())
+
